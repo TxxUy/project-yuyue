@@ -8,5 +8,5 @@ public interface UserDao {
     /*查找*/
     User getByUserName(String username);
     /*登录*/
-    int login(String username,String password);
+    User login(String username,String password);
 }

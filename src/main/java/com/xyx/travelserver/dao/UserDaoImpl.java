@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao{
@@ -43,9 +44,24 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public int login(String username, String password) {
-        String sql = "select count(*) from table_user where UserName=? and PassWord=?";
-        Integer count = this.jdbcTemplate.queryForObject(sql, Integer.class, username, password);
-        return (count != null && count > 0) ? 1 : 0;
+    public User login(String username, String password) {
+        String sql = "SELECT * FROM table_user WHERE UserName = ? AND PassWord = ?";
+        List<User> users = this.jdbcTemplate.query(sql, (resultSet, i) -> {
+            User user = new User();
+            user.setId(resultSet.getInt("id"));
+            user.setUserName(resultSet.getString("UserName"));
+            user.setPassWord(resultSet.getString("PassWord"));
+            user.setEmail(resultSet.getString("Email"));
+            user.setAddress(resultSet.getString("Address"));
+            user.setGender(resultSet.getString("Gender"));
+            // 设置其他字段...
+            return user;
+        }, username, password);
+
+        if (!users.isEmpty()) {
+            return users.get(0);
+        } else {
+            return null; // 查询结果为空，返回空值
+        }
     }
 }

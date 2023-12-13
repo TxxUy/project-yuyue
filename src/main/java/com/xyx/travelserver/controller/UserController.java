@@ -45,7 +45,7 @@ public class UserController {
      */
     @RequestMapping("/login")
     @ResponseBody
-    public int login(String username,String password){
+    public User login(String username,String password){
         return this.userService.login(username,password);
     }
 }
