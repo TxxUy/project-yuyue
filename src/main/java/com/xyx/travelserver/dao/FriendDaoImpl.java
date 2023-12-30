@@ -1,7 +1,6 @@
 package com.xyx.travelserver.dao;
 
 import com.xyx.travelserver.entity.Friend;
-import com.xyx.travelserver.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +21,8 @@ public class FriendDaoImpl implements FriendDao {
                 sql,
                 friend.getFriend_name(),
                 friend.getFriend_type(),
-                friend.getFriend_information()
+                friend.getFriend_information(),
+                friend.getPassword()
         );
     }
 
@@ -39,11 +39,6 @@ public class FriendDaoImpl implements FriendDao {
             return friend;
         });
 
-        // 输出查询结果
-        for (Friend friend : friends) {
-            System.out.println(friend.toString()); // 或使用日志记录库进行记录
-        }
-
         return friends;
     }
 
@@ -51,13 +46,11 @@ public class FriendDaoImpl implements FriendDao {
     public List<String> getTypeCount() {
         String sql = "SELECT DISTINCT friendtype FROM table_friend";
         List<String> typeList = jdbcTemplate.queryForList(sql, String.class);
-
         return typeList;
     }
 
     @Override
     public Friend getById(int id) {
-        System.out.println(id);
         String sql = "SELECT * FROM table_friend WHERE id = ?";
         Friend friend = jdbcTemplate.queryForObject(sql, new RowMapper<Friend>() {
             @Override
@@ -67,11 +60,45 @@ public class FriendDaoImpl implements FriendDao {
                 friend.setFriend_name(rs.getString("friendname"));
                 friend.setFriend_type(rs.getString("friendtype"));
                 friend.setFriend_information(rs.getString("friendinformation"));
+                friend.setPassword(rs.getInt("password"));
                 friend.setBase64(rs.getString("photo"));
                 return friend;
             }
         },id);
-        System.out.println(friend.getBase64());
         return friend;
+    }
+
+    @Override
+    public Friend login(String name, int password) {
+        String sql = "SELECT * FROM table_friend WHERE friendname = ? AND PassWord = ?";
+        List<Friend> friends = this.jdbcTemplate.query(sql, (resultSet, i) -> {
+            Friend user = new Friend();
+            user.setId(resultSet.getInt("id"));
+            user.setFriend_name(resultSet.getString("FriendName"));
+            user.setPassword(resultSet.getInt("PassWord"));
+            user.setFriend_information(resultSet.getString("friendinformation"));
+            user.setFriend_type(resultSet.getString("friendtype"));
+            user.setBase64(resultSet.getString("photo"));
+            // 设置其他字段...
+            return user;
+        }, name, password);
+
+        if (!friends.isEmpty()) {
+            return friends.get(0);
+        } else {
+            return null; // 查询结果为空，返回空值
+        }
+    }
+
+    @Override
+    public int update(int id, String name,int password,String information) {
+        String sql = "update table_friend set friendname = ?, friendinformation = ? ,password = ? where id = ?";
+        return this.jdbcTemplate.update(
+                sql,
+                name,
+                information,
+                password,
+                id
+        );
     }
 }

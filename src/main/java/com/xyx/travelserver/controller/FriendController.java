@@ -50,9 +50,41 @@ public class FriendController {
     private List<String> getTypeCount(){
         return this.friendService.getTypeCount();
     }
+
+    /**
+     * 根据id获取专家
+     * @param id
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/getById")
     private Friend getById(int id){
         return this.friendService.getById(id);
+    }
+
+    /**
+     * 专家登录
+     * @param name
+     * @param password
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/login")
+    private Friend login(String name,int password){
+        return this.friendService.login(name,password);
+    }
+
+    /**
+     * 专家更新自己的个人信息
+     * @param id
+     * @param name
+     * @param password
+     * @param information
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/update")
+    private int update(int id,String name,int password, String information){
+        return this.friendService.update(id,name,password,information);
     }
 }

@@ -5,6 +5,16 @@ public class Friend {
     private String friend_name;
     private String friend_type;
     private String friend_information;
+    private int password;
+
+    public int getPassword() {
+        return password;
+    }
+
+    public void setPassword(int password) {
+        this.password = password;
+    }
+
     private String base64;
 
     public String getBase64() {

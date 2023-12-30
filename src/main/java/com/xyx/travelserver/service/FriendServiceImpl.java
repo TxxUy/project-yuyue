@@ -30,4 +30,14 @@ public class FriendServiceImpl implements FriendService {
     public Friend getById(int id) {
         return friendDao.getById(id);
     }
+
+    @Override
+    public Friend login(String name, int password) {
+        return friendDao.login(name,password);
+    }
+
+    @Override
+    public int update(int id, String name,int password,String information) {
+        return friendDao.update(id,name,password,information);
+    }
 }

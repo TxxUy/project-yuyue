@@ -55,8 +55,9 @@ public class AppointmentController {
     }
 
     /**
-     * 服务器查找对应医生的预约记录
+     * 服务器根据id和日期查找对应医生的预约记录
      * @param id
+     * @param date
      * @return
      */
     @ResponseBody
@@ -64,6 +65,12 @@ public class AppointmentController {
     private List<Appointment> getByFriendId(int id,Date date){
         return this.appointmentService.getByFriendId(id,date);
     }
+
+    /**
+     * 删除对应的预约记录
+     * @param id
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/deleteAppointment")
     private int deleteAppointment(int id){

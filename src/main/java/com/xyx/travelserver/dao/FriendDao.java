@@ -13,4 +13,8 @@ public interface FriendDao {
     List<String> getTypeCount();
     /*根据id查找对应的医生*/
     Friend getById(int id);
+    /*登录*/
+    Friend login(String name,int password);
+    /*更新信息*/
+    int update(int id, String name,int password,String information);
 }
